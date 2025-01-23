@@ -10,8 +10,9 @@ class ParsGUIInterface(ABC):
         - window : Window
     '''
 
-    def __init__(self, program_name):
+    def __init__(self, program_name, sound_presets):
         self.program_name = program_name
+        self.sound_presets = sound_presets
         self.cur_event, self.cur_values = (-1, -1)
         self.window = self.create_window()
     
@@ -178,10 +179,6 @@ class ParsGUIInterface(ABC):
         pass
 
     @abstractmethod
-    def set_state_to_exporting(self):
-        pass
-
-    @abstractmethod
     def set_state_to_saving_parameters(self):
         pass
 
@@ -191,6 +188,14 @@ class ParsGUIInterface(ABC):
 
     @abstractmethod
     def update_inst_names(self):
+        pass
+
+    @abstractmethod
+    def update_window(self, par_dict):
+        pass
+
+    @abstractmethod
+    def run_and_set_event(self, audio_func, event_name):
         pass
 
     @abstractmethod
