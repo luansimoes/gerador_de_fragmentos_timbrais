@@ -3,7 +3,7 @@ import PySimpleGUI as sg
 
 
 # ------------------------------------------ LAYOUT --------------------------------------------------------
-columns = {
+COLUMNS = {
         'inst_choice' :
             [
                 [sg.Text("Escolha os instrumentos:", justification='left')],
@@ -53,11 +53,11 @@ columns = {
             ],
         }
 
-layout = [
+LAYOUT = [
             [sg.Menu([['Arquivo', ['Carregar Parâmetros', 'Salvar Parâmetros']]])],
             [sg.Frame('', 
                 [
-                    [sg.Frame('', columns[key], size = (200, 350), key=key, border_width=2) for key in columns.keys()],
+                    [sg.Frame('', COLUMNS[key], size = (200, 350), key=key, border_width=2) for key in COLUMNS],
                     ], size=(900, 400), border_width=0, element_justification='c')
                 ],
                 [
@@ -80,7 +80,7 @@ class PSGInterface(ParsGUIInterface):
         sg.theme(theme)
 
     def create_window(self):
-        window = sg.Window(self.program_name, layout, finalize = True)
+        window = sg.Window(self.program_name, LAYOUT, finalize = True)
         window['inst_names'].update(values=self.sound_presets)
         return window
 
