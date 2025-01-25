@@ -13,7 +13,7 @@ class ParsGUIInterface(ABC):
     def __init__(self, program_name, sound_presets):
         self.program_name = program_name
         self.sound_presets = sound_presets
-        self.cur_event, self.cur_values = (-1, -1)
+        self._cur_event, self._cur_values = None, None
         self.window = self.create_window()
     
     def validate_fields(self):
@@ -144,7 +144,10 @@ class ParsGUIInterface(ABC):
 
         return True
 
-
+    @property
+    @abstractmethod
+    def cur_values(self):
+        pass
     
     @abstractmethod
     def create_window(self):
@@ -200,6 +203,14 @@ class ParsGUIInterface(ABC):
 
     @abstractmethod
     def close_window(self):
+        pass
+
+    @abstractmethod
+    def play(self):
+        pass
+
+    @abstractmethod
+    def external_bind(self, event, action):
         pass
 
 

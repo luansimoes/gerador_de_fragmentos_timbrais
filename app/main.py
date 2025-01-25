@@ -5,12 +5,14 @@ from app.encoder import CompositionEncoder
 from scamp._soundfont_host import get_soundfont_presets
 from edopi import Scale
 
-from app.interface import PSGInterface
+from app.interface import PSGInterface, TkInterface
 
 import json
 
 PRESETS = sorted([p.name for p in get_soundfont_presets()])
 PROGRAM_NAME = "Sistema Composicional Parcimonioso"
+
+composition = Composition(None, None)
 
 
 
@@ -48,9 +50,42 @@ def generate_piece(fields):
                     inst_weights = inst_weights,
                     pars = fields)
 
+def generate(interface):
+    global composition
+
+    valid = interface.validate_fields()
+    print(valid)
+
+    if valid:
+        interface.set_state_to_generating()
+        interface.read_window()
+        composition = generate_piece(interface.cur_values)
+
+def export_file(interface):
+    filename = interface.get_exporting_filename()
+            
+    composition.export_score(filename)
+    save_json(f'{filename[:-4]}.json', composition, encoder = CompositionEncoder)
+
+def save_pars(interface):
+    filename = interface.set_state_to_saving_parameters()
+    save_json(filename, interface.cur_values)
+
+def load_pars(interface):
+    filename = interface.set_state_to_loading_parameters()
+
+    try:
+        par_dict = load_json(filename)    
+    except Exception as e:
+        print(e)
+        interface.show_popup('Um erro inesperado ocorreu.', 'ERRO')
+    else:
+        interface.update_window(par_dict)
+        interface.show_popup('Carregamento concluído com sucesso!', 'SUCESSO') 
+
 def main():
     
-    interface = PSGInterface(PROGRAM_NAME, PRESETS, "Purple")
+    interface = PSGInterface(PROGRAM_NAME, PRESETS)
 
     composition = None
 
@@ -111,3 +146,16 @@ def main():
 
     interface.close_window()
 
+def main():
+        
+    interface = TkInterface(PROGRAM_NAME, PRESETS)
+
+    interface.external_bind("<<GEN>>", generate, interface)
+    interface.external_bind("<<PLAY>>", interface.play, lambda: composition.play_piece(100), "<<END_PLAY>>")
+    interface.external_bind("<<END_PLAY>>", interface.set_state_to_ready)
+    interface.external_bind("<<EXP_FILE>>", export_file, interface)
+    interface.external_bind("<<SAVE_PARS>>", save_pars, interface)
+    interface.external_bind("<<LOAD_PARS>>", load_pars, interface)
+    interface.external_bind("<<INST_NAMES>>", interface.update_inst_names) 
+
+    interface.run_mainloop()

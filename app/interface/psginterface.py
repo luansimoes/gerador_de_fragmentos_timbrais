@@ -73,9 +73,10 @@ LAYOUT = [
                 ]
 
 
+#TODO: Reorganizar para funcionar novamente no programa
 class PSGInterface(ParsGUIInterface):
     
-    def __init__(self, program_name, sound_presets, theme):
+    def __init__(self, program_name, sound_presets, theme="Purple"):
         super().__init__(program_name, sound_presets)
         sg.theme(theme)
 
@@ -145,3 +146,6 @@ class PSGInterface(ParsGUIInterface):
     
     def close_window(self):
         self.window.close()
+
+    def external_bind(self, event, action):
+        pass
