@@ -96,9 +96,8 @@ class TkInterface(ParsGUIInterface):
     def create_inst_choice(self, frame):
         ttk.Label(frame, text = "Escolha os instrumentos: ", font="TkFixedFont").grid(column=1, row=1, sticky=(N, W))
 
-        # TODO: Allow multiple instruments
         self.widget_vars["inst_names"] = choicesvar = StringVar(value=self.sound_presets)
-        lb = Listbox(frame, height=15, listvariable=self.widget_vars["inst_names"])
+        lb = Listbox(frame, height=15, listvariable=self.widget_vars["inst_names"], selectmode="extended")
         lb.bind("<<ListboxSelect>>", lambda e: self.window.event_generate("<<INST_NAMES>>"))
         lb.grid(column=1, row=2, sticky=(W, N, E, S))
         self.list_box = lb
@@ -116,12 +115,14 @@ class TkInterface(ParsGUIInterface):
         ttk.Label(frame, text = "Instrumentos escolhidos: ", font="TkFixedFont").grid(column=1, row=1, sticky=(N, W))
 
         # Frame with instrument names
-        list_frame = ttk.Frame(frame, height=400)
+        list_frame = ttk.Frame(frame, height=35)
         list_frame.grid(column=1, row=2, sticky=(N, W, E, S))
         self.widget_vars["inst_text"] = StringVar(value = "")
         l1 = ttk.Label(list_frame, textvariable=self.widget_vars["inst_text"], padding=f"0 {SP} 0 {SP}")
         l1.grid(sticky=(N, W, E, S))
+        list_frame.rowconfigure(1, weight=1)
         frame.rowconfigure(2, weight=1)
+        list_frame.grid_propagate(0)
 
         # Second label
         l2 = ttk.Label(frame, text = "Oitavas base: ", font="TkFixedFont", padding=f"0 {2*SP} 0 {SP}")
