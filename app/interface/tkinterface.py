@@ -1,5 +1,4 @@
 from app.interface.parsGUIinterface import ParsGUIInterface
-#from parsGUIinterface import ParsGUIInterface
 from tkinter import *
 from tkinter import filedialog
 from tkinter import ttk
@@ -11,16 +10,34 @@ import threading
 SP = 5
 
 class TkInterface(ParsGUIInterface):
+    """
+    TkInterface is a concrete implementation of the ParsGUIInterface using Tkinter.
+    It provides methods to create and manage the graphical user interface for the parsimonious system.
+    """
 
     def __init__(self, program_name, sound_presets):
+        """
+        Initializes the TkInterface with the given program name and sound presets.
+        Args:
+            program_name (str): The name of the program.
+            sound_presets (list): A list of sound presets.
+        """
         super().__init__(program_name, sound_presets)
         self.cur_music_thread = None
 
     @property
     def cur_values(self):
+        """
+        Returns the current values of the interface fields as a dictionary.
+        """
         return {name : self.get_field(name) for name in self.widget_vars}
 
     def create_window(self):
+        """
+        Creates the main window of the interface.
+        Returns:
+            ThemedTk: The main window object.
+        """
         root = ThemedTk(theme='itft1')
         root.resizable(FALSE, FALSE)
         root.title(self.program_name)
@@ -54,6 +71,13 @@ class TkInterface(ParsGUIInterface):
         return root
 
     def create_menu(self, frame):
+        """
+        Creates the menu bar for the main window.
+        Args:
+            frame (ThemedTk): The main window object.
+        Returns:
+            Menu: The menu bar object.
+        """
         menubar = Menu(frame)
 
         menu_file = Menu(menubar, tearoff = 0)
@@ -66,6 +90,13 @@ class TkInterface(ParsGUIInterface):
         return menubar
 
     def create_columns(self, root):
+        """
+        Creates the columns for the main window.
+        Args:
+            root (ttk.Frame): The frame to contain the columns.
+        Returns:
+            list: A list of column frame objects.
+        """
         c1 = ttk.Frame(root, padding=f"{SP} {SP} {2*SP} {2*SP}", width=300, height=350, borderwidth=2, relief=RIDGE)
         c2 = ttk.Frame(root, padding=f"{SP} {SP} {2*SP} {2*SP}", width=300, height=350, borderwidth=2, relief=RIDGE)
         c3 = ttk.Frame(root, padding=f"{SP} {SP} {2*SP} {2*SP}", width=300, height=350, borderwidth=2, relief=RIDGE)
@@ -94,6 +125,11 @@ class TkInterface(ParsGUIInterface):
         return [c1, c2, c3, c4]
 
     def create_inst_choice(self, frame):
+        """
+        Creates the instrument choice section in the given frame.
+        Args:
+            frame (ttk.Frame): The frame to contain the instrument choice section.
+        """
         ttk.Label(frame, text = "Escolha os instrumentos: ", font="TkFixedFont").grid(column=1, row=1, sticky=(N, W))
 
         self.widget_vars["inst_names"] = choicesvar = StringVar(value=self.sound_presets)
@@ -111,6 +147,11 @@ class TkInterface(ParsGUIInterface):
         frame.rowconfigure(2, weight=1)
 
     def create_inst_config(self, frame):
+        """
+        Creates the instrument configuration section in the given frame.
+        Args:
+            frame (ttk.Frame): The frame to contain the instrument configuration section.
+        """
         # First label
         ttk.Label(frame, text = "Instrumentos escolhidos: ", font="TkFixedFont").grid(column=1, row=1, sticky=(N, W))
 
@@ -138,6 +179,11 @@ class TkInterface(ParsGUIInterface):
         ttk.Entry(frame, textvariable=self.widget_vars['inst_weights'], justify='left').grid(column=1, row=6, sticky=(N, W, E))
 
     def create_pitch_config(self, frame):
+        """
+        Creates the pitch configuration section in the given frame.
+        Args:
+            frame (ttk.Frame): The frame to contain the pitch configuration section.
+        """
         l1 = ttk.Label(frame, text = "Tamanho do EDO: ", font="TkFixedFont", padding=f"0 0 0 {SP}")
         l1.grid(column=1, row=1, sticky=(N, W))
         self.widget_vars['edo_size'] = StringVar(value="12")
@@ -169,6 +215,11 @@ class TkInterface(ParsGUIInterface):
         ttk.Entry(frame, textvariable=self.widget_vars['l'], justify='left').grid(column=1, row=10, sticky=(N, W, E))
 
     def create_rhythm_config(self, frame):
+        """
+        Creates the rhythm configuration section in the given frame.
+        Args:
+            frame (ttk.Frame): The frame to contain the rhythm configuration section.
+        """
         l1 = ttk.Label(frame, text = "Número de módulos: ", font="TkFixedFont", padding=f"0 0 0 {SP}")
         l1.grid(column=1, row=1, sticky=(N, W, E, S))
         self.widget_vars['measures'] = StringVar(value="16")
@@ -188,6 +239,12 @@ class TkInterface(ParsGUIInterface):
         ttk.Entry(frame, textvariable=self.widget_vars['n_timepoints'], justify='left').grid(column=1, row=6, sticky=(N, W, E))
 
     def create_button_row(self, parent, root):
+        """
+        Creates the row of buttons at the bottom of the main window.
+        Args:
+            parent (ttk.Frame): The frame to contain the buttons.
+            root (ThemedTk): The main window object.
+        """
         b1 = ttk.Button(parent, text="Gerar", command=lambda : self.window.event_generate("<<GEN>>"))
         b1.grid(column=1, row=2, padx=SP)
 
@@ -202,15 +259,31 @@ class TkInterface(ParsGUIInterface):
         self.buttons["EXP"] = b3
     
     def run_mainloop(self):
+        """
+        Starts the main loop of the Tkinter interface.
+        """
         self.window.mainloop()
 
     def window_closed(self):
+        """
+        Checks if the window has been closed.
+        """
         pass
 
     def read_window(self):
+        """
+        Reads the current state of the window.
+        """
         pass
  
     def get_field(self, field_name):
+        """
+        Retrieves the value of the specified field.
+        Args:
+            field_name (str): The name of the field to retrieve.
+        Returns:
+            The value of the specified field.
+        """
         if field_name == "inst_names":
             names = eval(self.widget_vars["inst_names"].get())
             indices = self.list_box.curselection()
@@ -219,6 +292,11 @@ class TkInterface(ParsGUIInterface):
         return self.widget_vars[field_name].get()
     
     def get_exporting_filename(self):
+        """
+        Opens a file dialog to get the filename for exporting the composition.
+        Returns:
+            str: The filename for exporting.
+        """
         filename = filedialog.asksaveasfilename()
         if filename == "":
             filename = "minha_composicao.xml"
@@ -227,23 +305,46 @@ class TkInterface(ParsGUIInterface):
         return filename
     
     def show_popup(self, msg, title):
+        """
+        Displays a popup message.
+        Args:
+            msg (str): The message to display.
+            title (str): The title of the popup window.
+        """
         messagebox.showinfo(message=msg, title=title)
     
     def set_state_to_generating(self):
+        """
+        Sets the state of the interface to generating.
+        Enables the play and export buttons and shows a popup message.
+        """
         self.buttons['PLAY']["state"] = "normal"
         self.buttons['EXP']["state"] = "normal"
 
         self.show_popup('Geração Concluída!', title="Aviso")
     
     def set_state_to_playing(self):
+        """
+        Sets the state of the interface to playing.
+        Disables the play and export buttons.
+        """
         self.buttons['PLAY']["state"] = "disabled"
         self.buttons['EXP']["state"] = "disabled"
     
     def set_state_to_ready(self):
+        """
+        Sets the state of the interface to ready.
+        Enables the play and export buttons.
+        """
         self.buttons['PLAY']["state"] = "normal"
         self.buttons['EXP']["state"] = "normal"
     
     def set_state_to_saving_parameters(self):
+        """
+        Opens a file dialog to get the filename for saving parameters.
+        Returns:
+            str: The filename for saving parameters.
+        """
         filename = filedialog.asksaveasfilename(filetypes=(('JSON', '*.json'), ), title="Escolha o caminho no qual deseja salvar o arquivo")
         if filename == "":
             filename = "meus_parametros.json"
@@ -252,10 +353,18 @@ class TkInterface(ParsGUIInterface):
         return filename
     
     def set_state_to_loading_parameters(self):
+        """
+        Opens a file dialog to get the filename for loading parameters.
+        Returns:
+            str: The filename for loading parameters.
+        """
         filename = filedialog.askopenfilename(filetypes=(('JSON', '*.json'), ), title="Escolha o arquivo que deseja carregar")
         return filename
     
     def update_inst_names(self):
+        """
+        Updates the instrument names in the interface.
+        """
         inst_names = self.get_field("inst_names")
         self.widget_vars['inst_text'].set('\n'.join(inst_names))
 
@@ -264,6 +373,11 @@ class TkInterface(ParsGUIInterface):
         self.widget_vars['inst_weights'].set(' '.join([str(int(100/n_insts))]*n_insts))
     
     def update_window(self, par_dict):
+        """
+        Updates the interface window with the given parameters dictionary.
+        Args:
+            par_dict (dict): The parameters dictionary to update the window with.
+        """
         self.list_box.select_clear(0, len(self.sound_presets)-1)
 
         for par_name in par_dict:
@@ -274,17 +388,39 @@ class TkInterface(ParsGUIInterface):
             self.list_box.selection_set(self.sound_presets.index(ind))
     
     def run_and_set_event(self, audio_func, event_name):
+        """
+        Runs the given audio function in a separate thread and sets the specified event.
+        Args:
+            audio_func (function): The audio function to run.
+            event_name (str): The name of the event to set.
+        """
         thread = threading.Thread(target=lambda:(audio_func(), self.window.event_generate(event_name)), daemon=True)
         thread.start()
 
     def close_window(self):
+        """
+        Closes the interface window.
+        """
         pass
 
     def play(self, audio_func, event_name):
+        """
+        Plays the audio using the given audio function and sets the specified event.
+        Args:
+            audio_func (function): The audio function to play.
+            event_name (str): The name of the event to set.
+        """
         self.run_and_set_event(audio_func, event_name)
         self.set_state_to_playing()
 
     def external_bind(self, event, action, *pars):
+        """
+        Binds an external event to the specified action.
+        Args:
+            event (str): The event to bind.
+            action (function): The action to bind to the event.
+            *pars: Additional parameters for the action.
+        """
         self.window.bind(event, lambda e: action(*pars))
 
 
