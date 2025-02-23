@@ -10,7 +10,7 @@ from app.interface import PSGInterface, TkInterface
 import json
 
 PRESETS = sorted([p.name for p in get_soundfont_presets()])
-PROGRAM_NAME = "Sistema Composicional Parcimonioso"
+PROGRAM_NAME = "Gerador de Fragmentos Timbrais"
 
 composition = Composition(None, None)
 
