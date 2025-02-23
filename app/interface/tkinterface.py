@@ -108,7 +108,7 @@ class TkInterface(ParsGUIInterface):
         lb.config(yscrollcommand = scroll.set)
         scroll.config(command = lb.yview)
 
-        frame.rowconfigure(1, weight=1)
+        frame.rowconfigure(2, weight=1)
 
     def create_inst_config(self, frame):
         # First label
