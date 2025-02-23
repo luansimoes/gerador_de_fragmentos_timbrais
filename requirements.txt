@@ -1,3 +1,4 @@
 scamp
-edopi
-pysimplegui
+ttkthemes
+edopi==1.1.0
+pysimplegui==4.70.1
